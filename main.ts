@@ -1,7 +1,15 @@
-import { serve } from "https://deno.land/std@v0.42.0/http/server.ts";
-const s = serve({ port: 8000 });
-console.log("http://localhost:8000/");
-for await (const req of s) {
-  req.respond({ body: "Hello World\n" });
+const fetchMeme = (topMemesRange: number) => {
+  return fetch(`https://www.reddit.com/r/memes/top/.json?count=${topMemesRange}`)
+    .then(res => res.json())
+    .then(res => {
+      // console.log(res.data.children[Math.floor(Math.random() * res.data.children.length)])
+      return res.data.children[Math.floor(Math.random() * topMemesRange)].data.url;
+    });
 }
 
+const getRandomMeme =  async() => {
+  let url = await fetchMeme(20);
+  console.log(url);
+}
+
+getRandomMeme()
