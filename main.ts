@@ -1,15 +1,18 @@
-const fetchMeme = (topMemesRange: number) => {
-  return fetch(`https://www.reddit.com/r/memes/top/.json?count=${topMemesRange}`)
-    .then(res => res.json())
-    .then(res => {
-      // console.log(res.data.children[Math.floor(Math.random() * res.data.children.length)])
-      return res.data.children[Math.floor(Math.random() * topMemesRange)].data.url;
-    });
-}
+import { Application, Router } from 'https://deno.land/x/oak/mod.ts';
+import { getRandomMeme } from './fetch_service.ts';
 
-const getRandomMeme =  async() => {
-  let url = await fetchMeme(20);
-  console.log(url);
-}
+// export const APP_HOST = Deno.env.get('APP_HOST') || "127.0.0.1";
+// export const APP_PORT = Deno.env.get('APP_PORT') || 8000;
 
-getRandomMeme()
+export const APP_HOST = "127.0.0.1";
+export const APP_PORT = 8000;
+
+
+const app = new Application();
+const router = new Router();
+
+router.get('/meme', getRandomMeme);
+app.use(router.routes());
+app.use(router.allowedMethods());
+
+await app.listen(`${APP_HOST}:${APP_PORT}`);
