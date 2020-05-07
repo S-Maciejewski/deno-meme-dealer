@@ -9,5 +9,6 @@ export default async ({
         request: Request,
         response: Response
     }) => {
-    response.body = { url: getRandomMeme() };
+    let url = await getRandomMeme();
+    response.body = { url };
 }
